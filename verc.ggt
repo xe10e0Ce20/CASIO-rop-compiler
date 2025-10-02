@@ -1,0 +1,64 @@
+// Gadgets 配置文件
+// 格式: $NAME {VALUE}
+//寄存器赋值
+$er0= {a821x1xx}
+$er2= {1488x1xx}
+$er4= {7c82x1xx}
+$?er6= {3863x1xx}
+$er8= {4a6dx1xx}
+$er10= {18c2x0xx}
+$er12= {3215x2xx}
+$er14= {720dx2xx}
+$xr0= {3461x1xx}
+$xr4= {786dx1xx}
+$xr8= {4638x1xx}
+$xr12= {2cd5x1xx}
+$qr0= {e230x1xx}
+$qr8= {3632x1xx}
+$qr8qr0= {7c23x2xx}
+$?ea=&x4 {760ex1xx}
+$?ea=er12 {467bx1xx}
+$er0er4= {d487x1xx}
+
+//特殊
+$EI_POPPC {d891x0xx}
+$DI_RT {8c92x0xx}
+//sp赋值
+$sp=er14&q8 {342dx1xx}
+$sp=er6&e8 {381dx2xx}
+$sp=er4+32&x4q8 {2692x1xx}
+
+//工具函数
+$strcpy {d203x2xx} //[er2]赋值为[er0]
+$memcpy {f086x0xx} //[er2]赋值为[er0]，长度由sp指向的内存决定
+$memcpy_special {cc87x1xx}
+$memset {928fx0xx} //从er0处填入r2的内容，长度由sp指向的内存决定
+$memcat {d603x2xx} //从er0处开始向后遍历，直到遇到00，并向后追加er2处的内容
+$[er0]=r2 {d203x2xx}
+$[er8]+=er2&x8 {248fx0xx}
+
+$print {b221x2xx}
+$render_bitmap {d08ax0xx}
+$render_ddd4 {0687x0xx}
+$render_e3d4 {807ex0xx}
+$ddd4_to_e3d4 {807ex0xx}
+$clear {807ex0xx}
+$delay {6c91x0xx}
+
+$waitkeyto[er0] {48f7x0xx}
+$?readkeyto[er8]&x4q8 {54a8x2xx}
+
+$r0=er0<=er2 {9ab5x0xx}
+$r0=er0>=er2 {b2b5x0xx}
+$?r0=er2==er4 {ae93x1xx}
+$?r0=er0==er2 {6a8dx0xx}
+
+$er4=er0+r2*er4 {bc3ax1xx}
+$?er2=er0 {144bx1xx}
+
+$traverse_by_ea {a48ex0xx}
+$?er6qr8=[ea] {68c3x1xx}
+
+//古早小工具
+$waitshift {c421x2xx}
+$shutdown {2491x2xx}

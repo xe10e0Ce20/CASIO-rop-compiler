@@ -1,0 +1,50 @@
+//格式：
+//*function (arg0, arg1=defaultValue){%%BODY%%}{    用%%BODY%%来作为函数体的插入位置
+//  %_arg0_%   用%_ _%包裹参数
+//  @adr.&_xxx_&   用&_ _&来限制地址标签的作用域
+//  #&_xxx_&    
+//}
+
+!ifzeror2 () {%%BODY%%} {
+    $er0er4= [ #&_end_& - 003e ] [ #&_end_& - #&_start_& ]
+    $er4=er0+r2*er4
+    $sp=er4+32&x4q8
+    @adr.&_start_&
+    %%BODY%%
+    @adr.&_end_&
+}
+
+!loop (tar, src, extra_len=0000) {%%BODY%%} {
+    @adr.&_start_&
+    %%BODY%%
+    @adr.&_end_&
+    *[er0]=r2 (#&_com_&, 01)
+    $qr0= [< #&_end_& - #&_start_& + 0030>] [%_src_%] [%_tar_%] [#&_start_& - 0002]
+    cc 87 
+    @adr.&_com_&
+    [%_extra_len_% + 0008]
+    00 00
+    $sp=er6&e8
+}
+
+!ifer0>er2 () {%%BODY%%} {
+    $r0=er0<=er2
+    $?er2=er0
+    $er0er4= [ #&_end_& - 003e ] [ #&_end_& - #&_start_& ]
+    $er4=er0+r2*er4
+    $sp=er4+32&x4q8
+    @adr.&_start_&
+    %%BODY%%
+    @adr.&_end_&
+}
+
+!ifer0<er2 () {%%BODY%%} { 
+    $r0=er0>=er2
+    $?er2=er0
+    $er0er4= [ #&_end_& - 003e ] [ #&_end_& - #&_start_& ]
+    $er4=er0+r2*er4
+    $sp=er4+32&x4q8
+    @adr.&_start_&
+    %%BODY%%
+    @adr.&_end_&
+}

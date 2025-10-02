@@ -1,0 +1,125 @@
+//格式：
+//*function (arg0(=defaultValue)?, arg1(=defaultValue)?){  使用=xxx来指定默认值
+//  %_arg0_%   用%_ _%包裹参数
+//  @adr.&_xxx_&   用&_ _&来限制地址标签的作用域
+//  #&_xxx_&    
+//}
+
+//拼字
+*print (str, row=21, font=0E){
+    $xr0= %_font_% %_row_% [ %_str_% ]
+    $print
+}
+*print_cont (row=21, font=0E){
+    $er0= %_font_% %_row_%
+    $print
+} 
+*render_bitmap (pattern, posx, posy, sizex, sizey){
+    $xr0= %_posx_% %_posy_% %_sizex_% %_sizey_%
+    $render_bitmap
+    $er0= [ %_pattern_% ]
+    $render_ddd4
+}
+
+//延迟
+*delay (time=96){     //默认5秒
+    $er0= xx %_time_%
+    $delay
+}
+
+//跳sp
+*jump_er14 (adr){
+    $er14= [< %_adr_% - 0008 >]
+    $sp=er14&q8
+}
+*jump_er6 (adr){ 
+    $er6= [< %_adr_% - 0002 >]
+    $sp=er6&e8
+}
+
+
+//内存修改
+*strcpy (tar, src){
+    $xr0= [ %_tar_% ] [ %_src_% ]
+    $strcpy
+}
+*memcpy (tar, src, len){
+    $xr0= [ %_tar_% ] [ %_src_% ]
+    $memcpy [ %_len_% ]
+}
+*memcpy_special (tar, src, len, er6=xxxx){ 
+    $qr0= [ %_len_% ] [ %_src_% ] [ %_tar_% ] [ %_er6_% ]
+    $memcpy_special 00 00
+}
+*memset (tar, val, len){
+    $xr0= [ %_tar_% ] %_val_% xx
+    $memset [ %_len_% ]
+}
+*[er0]=r2 (tar, val){
+    $xr0= [ %_tar_% ] %_val_% xx
+    $[er0]=r2
+}
+*[er8]+=er2 (tar, val, xr8=xxxxxxxx){
+    $er8= [ %_tar_% ] 
+    $er2= [ %_val_% ]
+    $[er8]+=er2&x8
+    %_xr8_%
+}
+
+
+//读取键码至er0，可以指定er0的默认值，这里默认为3333
+*readkeyto_er0 ( defaultvalue=3333 ){
+    $er8= [ #&_er0_& ]
+    $er14= [< #&_jump_& - 000c >]
+    $?readkeyto[er8]&x4q8
+    @adr.&_jump_&
+    $er0= 
+    @adr.&_er0_&
+    %_defaultvalue_%
+}
+
+
+//重置lr
+*rstlr (){
+    $EI_POPPC
+    $DI_RT
+}
+
+
+//分支结构，这里是ea分支法
+*setea (value, xr4=xxxxxxxx){
+    $?er6= 01xx
+    $?ea=&x4 [ %_value_% ]
+    %_xr4_%
+}
+
+*?setea (value){
+    $er12= [ %_value_% - 000a]
+    $?ea=er12
+}
+
+//使用17b40赋值ea，会污染ea前0x0a个字节，且rt返回，但字节数较少
+*dispatch_by_ea (table_dest){
+    *?setea (%_table_dest_%)
+    $traverse_by_ea
+    $?er6qr8=[ea]
+    $sp=er6&e8
+}
+
+//使用10e76赋值ea，不会污染，且使用poppc
+*dispatch_by_ea_2 (table_dest){
+    *setea (%_table_dest_%)
+    $traverse_by_ea
+    $?er6qr8=[ea]
+    $sp=er6&e8
+}
+
+//清除屏幕
+*clear_ddd4 (){
+    $er0= 00xx
+    $clear
+}
+*clear_e3d4 (){ 
+    $er0= 40xx
+    $clear
+}
