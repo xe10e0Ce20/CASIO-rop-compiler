@@ -29,7 +29,7 @@ config_grammar = r"""
     ANY_STRING: /[^,)]+/
     ANY_CHAR: /[^\{\}]+/
     
-    COMMENT: /\/\/[^\n]*/ 
+    COMMENT: /(\/\/|;)[^\n]*/
     // --- 导入和忽略 ---
     %import common.CNAME 
     %import common.NEWLINE 
@@ -112,7 +112,7 @@ pre_grammar = r"""
     params: [param ("," param)*]
     param: CNAME ("=" ANY_STRING)?
 
-    COMMENT: /\/\/[^\n]*/ 
+    COMMENT: /(\/\/|;)[^\n]*/
     //终结符
     BLOCK_CONTENT: /(.|\n)+?(?=@blockend)/
     GGT_NAME: /\$[^ \t\r\n(]+/
@@ -238,7 +238,7 @@ func_grammar = r"""
     param: ANY_STRING
     params: [param ("," param)*]
 
-    COMMENT: /\/\/[^\n]*/ 
+    COMMENT: /(\/\/|;)[^\n]*/
     
     //终结符
     HEX_DATA: /[0-9a-fA-FxX]{2}/
@@ -417,7 +417,7 @@ pass1_grammar = r"""
     LABEL_CALL_RAW: /##[a-zA-Z_][a-zA-Z0-9_]*/
     HEX_DATA: /[0-9a-fA-FxX]{2}/
 
-    COMMENT: /\/\/[^\n]*/ 
+    COMMENT: /(\/\/|;)[^\n]*/
 
 
     %ignore COMMENT    
@@ -532,7 +532,7 @@ adr_grammar = r"""
     offset_def: "@offset" "=" FOUR_BYTE
     FOUR_BYTE: /[0-9a-fA-F]{4}/
 
-    COMMENT: /\/\/[^\n]*/ 
+    COMMENT: /(\/\/|;)[^\n]*/
 
     %ignore COMMENT
     %import common.CNAME
@@ -596,7 +596,7 @@ pass2_grammar = r"""
     HEX_DATA: /[0-9a-fA-FxX]{2}/
 
     
-    COMMENT: /\/\/[^\n]*/ 
+    COMMENT: /(\/\/|;)[^\n]*/
 
     %ignore COMMENT
     %import common.CNAME
