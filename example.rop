@@ -38,11 +38,11 @@ def $er0=[er0]&x8? {2653x2xx}       //rom里翻到的，L ER0, [ER0]   POP XR8
         *dispatch_by_ea (d400)
         
         @adr.br_up  //如果按了上键，执行的逻辑
-        *[er8]+=er2 (#flag, fff0)  //将flag减去10h
+        *[er8]+=er2 (#flag, ffef)  //将flag减去10h
         *jump_er14 (#end)
 
         @adr.br_down
-        *[er8]+=er2 (#flag, 0010 )
+        *[er8]+=er2 (#flag, 0011 )
         *jump_er14 (#end)
 
         @adr.br_left
