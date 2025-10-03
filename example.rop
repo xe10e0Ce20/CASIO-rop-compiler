@@ -1,0 +1,81 @@
+import verc.ggt     //导入配置
+import common.spf
+import common.cpf
+
+//重定义print函数，突然想玩一玩221ae,怀旧一下不过分吧
+def $print {ae21x2xx}       //后定义的函数会覆盖先定义的函数，所以会直接覆盖配置文件读取的函数
+def *print (str, row=21){
+    $xr0= %_row_% xx [ %_str_% ]    //使用221ae打印字符，所以print函数也要改
+    $print
+}
+def *print_cont (row=21){
+    $er0= %_row_% xx            //接续前面的打印字符，即不更新er2直接打印
+    $print
+}
+def $er0=[er0]&x8? {2653x2xx}       //rom里翻到的，L ER0, [ER0]   POP XR8
+
+@block.main:
+    @offset = d710
+    @x=0
+
+    @adr.start
+    !loop (#start , e9e0){      //循环，从e9e0复制到start的地址（即d710）来循环
+        *clear_ddd4 ()
+        $er0= [#flag]       //将er0赋值为存储当前页码的内存地址
+        $EI_POPPC       //由于后面都要用RT，先重置一下LR
+        $er0=[er0]&x8?
+        xx xx xx xx
+        $?er2=er0?          //将er2赋值为er0
+        *print_cont (01)       //从er2的地方开始，打印字符串
+        *print_cont (11)
+        *print_cont (21)
+        *print_cont (31)
+        $render_ddd4    //刷新屏幕
+        *memcpy(d400, #table, <#table_end - #table>)    //将ea跳转表复制到d300
+        *readkeyto_er0 ()       //直接调用打包好的函数来读键码
+        $EI_POPPC
+        //用ea进行键码分支
+        *dispatch_by_ea (d400)
+        
+        @adr.br_up  //如果按了上键，执行的逻辑
+        *[er8]+=er2 (#flag, fff0)  //将flag减去10h
+        *jump_er14 (#end)
+
+        @adr.br_down
+        *[er8]+=er2 (#flag, 0010 )
+        *jump_er14 (#end)
+
+        @adr.br_left
+        *[er8]+=er2 (#flag, ffff)
+        *jump_er14 (#end)
+
+        @adr.br_right
+        *[er8]+=er2 (#flag, 0001)
+        
+        @adr.end
+    }
+
+    @adr.flag       //这里是存储当前页码的位置，默认从字符串开始
+    [#str]     
+    @adr.cpy_end    //启动程序时从start开始，到这里结束复制
+
+    @offset = e9e0      //数据区，ea表和字符串所在的位置，为了方便复制，直接修改偏移量到e9e0
+
+    @adr.table   //ea跳转表
+    8004 [#br_up - 0002] 4008 [#br_down - 0002] 4004 [#br_left - 0002] 8008 [#br_right - 0002] 0000 [#end - 0002]
+    @adr.table_end   
+
+    //字符串，这里懒得写了，可以自由添加
+    @adr.str 
+    30 31 32 33 34 35 36 37
+
+@blockend       //别忘了添加结束标签！
+
+@block.launcher:
+    @offset = d180  //一个简单的启动程序，反正没用到地址标签，随便写个偏移量得了
+    @x=3
+    31 32 33 34 35 36 37 38 39 30 31 32 33 34 35 36 37
+    31 32 33 34 35 36 37 38 39 30 31 32 33 34 35 36 37
+    *memcpy_special (#start, e9e0, <##cpy_end - ##start>, d70e)
+    $sp=er6&e8
+@blockend

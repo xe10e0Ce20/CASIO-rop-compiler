@@ -4,10 +4,33 @@
 //  @adr.&_xxx_&   用&_ _&来限制地址标签的作用域
 //  #&_xxx_&    
 //}
+// 规范：如果依赖RT返回则在末尾增加?
 
-!ifzeror2 () {%%BODY%%} {
+!ifzeror2? () {%%BODY%%} {
     $er0er4= [ #&_end_& - 003e ] [ #&_end_& - #&_start_& ]
-    $er4=er0+r2*er4
+    $er4=er0+r2*er4?
+    $sp=er4+32&x4q8
+    @adr.&_start_&
+    %%BODY%%
+    @adr.&_end_&
+}
+
+!ifer0>er2? () {%%BODY%%} {
+    $r0=er0<=er2?
+    $?er2=er0?
+    $er0er4= [ #&_end_& - 003e ] [ #&_end_& - #&_start_& ]
+    $er4=er0+r2*er4?
+    $sp=er4+32&x4q8
+    @adr.&_start_&
+    %%BODY%%
+    @adr.&_end_&
+}
+
+!ifer0<er2? () {%%BODY%%} { 
+    $r0=er0>=er2?
+    $?er2=er0?
+    $er0er4= [ #&_end_& - 003e ] [ #&_end_& - #&_start_& ]
+    $er4=er0+r2*er4?
     $sp=er4+32&x4q8
     @adr.&_start_&
     %%BODY%%
@@ -27,24 +50,3 @@
     $sp=er6&e8
 }
 
-!ifer0>er2 () {%%BODY%%} {
-    $r0=er0<=er2
-    $?er2=er0
-    $er0er4= [ #&_end_& - 003e ] [ #&_end_& - #&_start_& ]
-    $er4=er0+r2*er4
-    $sp=er4+32&x4q8
-    @adr.&_start_&
-    %%BODY%%
-    @adr.&_end_&
-}
-
-!ifer0<er2 () {%%BODY%%} { 
-    $r0=er0>=er2
-    $?er2=er0
-    $er0er4= [ #&_end_& - 003e ] [ #&_end_& - #&_start_& ]
-    $er4=er0+r2*er4
-    $sp=er4+32&x4q8
-    @adr.&_start_&
-    %%BODY%%
-    @adr.&_end_&
-}

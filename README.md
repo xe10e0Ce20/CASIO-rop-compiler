@@ -235,6 +235,7 @@ pop qr8
 ```
 $?waitkeyto[er8]&x4q8
 ```
+另外，如果函数或gadgets依赖RT返回则在末尾增加?
 
 - 函数传参
 函数传参统一使用大端
@@ -470,6 +471,7 @@ To use address labels within a function's scope (to prevent conflicts with exter
   ```
   $?waitkeyto[er8]&x4q8
   ```
+  If the function/gadget relys on RT, add `?` at the end.
 
 - Function Parameter Passing  
   All function parameters must be passed in big-endian order.

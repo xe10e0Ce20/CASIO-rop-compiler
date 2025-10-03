@@ -4,12 +4,14 @@
 //  @adr.&_xxx_&   用&_ _&来限制地址标签的作用域
 //  #&_xxx_&    
 //}
+// 规范：如果依赖RT返回则在末尾增加?
 
 //拼字
 *print (str, row=21, font=0E){
     $xr0= %_font_% %_row_% [ %_str_% ]
     $print
 }
+//接续前面的打印字符，即不更新er2直接打印
 *print_cont (row=21, font=0E){
     $er0= %_font_% %_row_%
     $print
@@ -27,7 +29,7 @@
     $delay
 }
 
-//跳sp
+//跳sp，直接输入真实大端地址即可，会自动计算偏移量
 *jump_er14 (adr){
     $er14= [< %_adr_% - 0008 >]
     $sp=er14&q8
@@ -49,16 +51,20 @@
 }
 *memcpy_special (tar, src, len, er6=xxxx){ 
     $qr0= [ %_len_% ] [ %_src_% ] [ %_tar_% ] [ %_er6_% ]
-    $memcpy_special 00 00
+    $memcpy_special xx xx
 }
 *memset (tar, val, len){
     $xr0= [ %_tar_% ] %_val_% xx
     $memset [ %_len_% ]
 }
+
+//将r2的值放到er0指向的地址
 *[er0]=r2 (tar, val){
     $xr0= [ %_tar_% ] %_val_% xx
     $[er0]=r2
 }
+
+//将er2的值加到er8指向的地址
 *[er8]+=er2 (tar, val, xr8=xxxxxxxx){
     $er8= [ %_tar_% ] 
     $er2= [ %_val_% ]
@@ -88,31 +94,39 @@
 
 //分支结构，这里是ea分支法
 *setea (value, xr4=xxxxxxxx){
-    $?er6= 01xx
-    $?ea=&x4 [ %_value_% ]
+    $er6= 01xx
+    $?eaxr4= [ %_value_% ]
     %_xr4_%
 }
 
-*?setea (value){
+*setea_[er4]=er0 (er4, value, xr4=xxxxxxxx){
+    $xr4= [ %_er4_% ] 01 00
+    $?[er4]=er0&eax4 [ %_value_% ]
+    %_xr4_%
+}
+
+*?setea? (value){
     $er12= [ %_value_% - 000a]
-    $?ea=er12
+    $?ea=er12?
 }
 
-//使用17b40赋值ea，会污染ea前0x0a个字节，且rt返回，但字节数较少
+//直接使用ea分支法，输入跳转表的起始地址就可以直接运行。使用10e76赋值ea，不会污染，且使用poppc
 *dispatch_by_ea (table_dest){
-    *?setea (%_table_dest_%)
-    $traverse_by_ea
-    $?er6qr8=[ea]
-    $sp=er6&e8
-}
-
-//使用10e76赋值ea，不会污染，且使用poppc
-*dispatch_by_ea_2 (table_dest){
     *setea (%_table_dest_%)
     $traverse_by_ea
     $?er6qr8=[ea]
     $sp=er6&e8
 }
+
+
+//使用17b40赋值ea，会污染ea前0x0a个字节，且rt返回，但字节数较少，不建议使用。。。
+*dispatch_by_ea_2? (table_dest){
+    *?setea? (%_table_dest_%)
+    $traverse_by_ea
+    $?er6qr8=[ea]
+    $sp=er6&e8
+}
+
 
 //清除屏幕
 *clear_ddd4 (){

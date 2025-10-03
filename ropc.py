@@ -806,8 +806,11 @@ def main():
     compiler = ROPCompiler()
     compiler.Compile(file, compile_txt)
 
+
 if __name__ == '__main__':
     try:
         main()
     except Exception as e:
         print(e)
+    finally:
+        input("Press Enter to exit...")
