@@ -7,7 +7,7 @@
 // 规范：如果依赖RT返回则在末尾增加?
 
 !ifzeror2? () {%%BODY%%} {
-    $er0er4= [ #&_end_& - 003e ] [ #&_end_& - #&_start_& ]
+    $er0er4= [ #&_start_& - 003e ] [ #&_end_& - #&_start_& ]
     $er4=er0+r2*er4?
     $sp=er4+32&x4q8
     @adr.&_start_&
@@ -18,7 +18,7 @@
 !ifer0>er2? () {%%BODY%%} {
     $r0=er0<=er2?
     $?er2=er0?
-    $er0er4= [ #&_end_& - 003e ] [ #&_end_& - #&_start_& ]
+    $er0er4= [ #&_start_& - 003e ] [ #&_end_& - #&_start_& ]
     $er4=er0+r2*er4?
     $sp=er4+32&x4q8
     @adr.&_start_&
@@ -29,7 +29,7 @@
 !ifer0<er2? () {%%BODY%%} { 
     $r0=er0>=er2?
     $?er2=er0?
-    $er0er4= [ #&_end_& - 003e ] [ #&_end_& - #&_start_& ]
+    $er0er4= [ #&_start_& - 003e ] [ #&_end_& - #&_start_& ]
     $er4=er0+r2*er4?
     $sp=er4+32&x4q8
     @adr.&_start_&
