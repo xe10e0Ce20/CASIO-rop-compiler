@@ -643,6 +643,9 @@ class Pass2Transformer(Transformer):
                 result_int += int_value
             elif op == "-":
                 result_int -= int_value
+                max_value = 16**max_width
+                if result_int < 0:
+                    result_int += max_value
             else:
                 raise Exception(f"Invalid operator: {op}")
             
