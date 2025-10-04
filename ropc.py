@@ -756,7 +756,7 @@ class ROPCompiler():
             overwrite_map.update(result["overwrite"])
             for addr, value in overwrite_map.items():
                 pos = int(addr, 16)
-                pos = pos*2 - 1
+                pos = pos*2 - 2
                 if pos >= len(self.blocks[block_name]):
                     raise Exception(f"Overwrite address out of range: {addr}")
                 
