@@ -85,12 +85,6 @@
 }
 
 
-//重置lr
-*rstlr (){
-    $EI_POPPC
-    $DI_RT
-}
-
 
 //分支结构，这里是ea分支法
 *setea (value, xr4=xxxxxxxx){

@@ -37,13 +37,15 @@ $?r0=er0==er2? {6a8dx0xx}
 //特殊
 $EI_POPPC {d891x0xx}
 $DI_RT {8c92x0xx}
+$RSTLR {48b9x2xx}
+
 //sp赋值
 $sp=er14&q8 {342dx1xx}
 $sp=er6&e8 {381dx2xx}
 $sp=er4+32&x4q8 {2692x1xx}
 
 //工具函数
-$strcpy {d203x2xx} //[er2]赋值为[er0]
+$strcpy {cc03x2xx} //[er2]赋值为[er0]
 $memcpy {f086x0xx} //[er2]赋值为[er0]，长度由sp指向的内存决定
 $memcpy_special {cc87x1xx}
 $memset {928fx0xx} //从er0处填入r2的内容，长度由sp指向的内存决定
