@@ -93,7 +93,7 @@
     %_xr4_%
 }
 
-*setea_[er4]=er0 (er4, value, xr4=xxxxxxxx){
+*setea|[er4]=er0 (er4, value, xr4=xxxxxxxx){
     $xr4= [ %_er4_% ] 01 00
     $?[er4]=er0&eax4 [ %_value_% ]
     %_xr4_%
