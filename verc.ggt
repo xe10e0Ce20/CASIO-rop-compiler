@@ -37,7 +37,7 @@ $?r0=er0==er2? {6a8dx0xx}
 //特殊
 $EI_POPPC {d891x0xx}
 $DI_RT {8c92x0xx}
-$RSTLR {48b9x2xx}
+$rstlr {48b9x2xx}
 
 //sp赋值
 $sp=er14&q8 {342dx1xx}
