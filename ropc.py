@@ -722,20 +722,28 @@ class ROPCompiler():
         self.adr_map = {}
 
     def PreCompile(self,code):
-        pre_parser = Lark(pre_grammar, start='pre_program', parser='lalr',transformer=PreTransformer())
-        pre_result= cast(Dict[str, Any], pre_parser.parse(code))
-        self.ggt = pre_result['ggt']
-        self.spf = pre_result['spf']
-        self.cpf = pre_result['cpf']
-        self.blocks = pre_result['blocks']
+        try:
+            pre_parser = Lark(pre_grammar, start='pre_program', parser='lalr',transformer=PreTransformer())
+            pre_result= cast(Dict[str, Any], pre_parser.parse(code))
+            self.ggt = pre_result['ggt']
+            self.spf = pre_result['spf']
+            self.cpf = pre_result['cpf']
+            self.blocks = pre_result['blocks']
+        except Exception as e:
+            print(f'An error occured during precompile: {e}')
+            print(pre_result)
         
     def FuncCompile(self):
         func_parser = Lark(func_grammar, start='func_program', parser='lalr',transformer=FuncTransformer(self.ggt, self.spf, self.cpf))
         for block_name, block in self.blocks.items():
-            last_block = ""
-            while block != last_block:
-                last_block = block
-                block = func_parser.parse(block)
+            try:
+                last_block = ""
+                while block != last_block:
+                    last_block = block
+                    block = func_parser.parse(block)
+            except Exception as e:
+                print(f'An error occured during funccompile: {e}')
+                print(block)
             self.blocks[block_name] = block
 
 
@@ -748,17 +756,22 @@ class ROPCompiler():
     
     def Pass2Compile(self):
         pass2parser = Lark(pass2_grammar, start='start', parser='lalr',transformer=Pass2Transformer(self.adr_map))
+
         for block_name, block in self.blocks.items():
-            overwrite_map = {}
-            result = cast(dict, pass2parser.parse(block))
-            self.blocks[block_name] = result["code"]
-            # 解析overwrite
-            overwrite_map.update(result["overwrite"])
-            for addr, value in overwrite_map.items():
-                pos = int(addr, 16)
-                pos = pos*2 - 2
-                if pos >= len(self.blocks[block_name]):
-                    raise Exception(f"Overwrite address out of range: {addr}")
+            try:
+                overwrite_map = {}
+                result = cast(dict, pass2parser.parse(block))
+                self.blocks[block_name] = result["code"]
+                # 解析overwrite
+                overwrite_map.update(result["overwrite"])
+                for addr, value in overwrite_map.items():
+                    pos = int(addr, 16)
+                    pos = pos*2 - 2
+                    if pos >= len(self.blocks[block_name]):
+                        raise Exception(f"Overwrite address out of range: {addr}")
+            except Exception as e:
+                print(f'An error occured during pass2compile: {e}')
+                print(block)
                 
                 self.blocks[block_name] = self.blocks[block_name][:pos+2] + value + self.blocks[block_name][pos+len(value)+2:]
 
